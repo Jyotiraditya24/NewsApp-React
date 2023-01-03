@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import NewsItem from './NewsItem'
 import Spinner from './Spinner';
+import PropTypes from "prop-types";
 
 let News = (props)=> {
   const[articles,setArticles] = useState([
@@ -159,16 +160,23 @@ let News = (props)=> {
 useEffect(()=>{
       let fetchData = async()=>{
           let data = await fetch(
-            `https://newsapi.org/v2/top-headlines?country=us&apiKey=5897b0bf2be647b7ab42fa7143b789ae&page=${pageNumber}&pageSize=${props.pageSize?props.pageSize:6}`
+            `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=5897b0bf2be647b7ab42fa7143b789ae&page=${pageNumber}&pageSize=${props.pageSize?props.pageSize:6}`
           )
           setLoading(true);
           let parsedData = await data.json();
           setArticles(parsedData.articles);
       } 
       setLoading(false);
-      fetchData();
-      
-  },[pageNumber]);
+      // fetchData();
+      document.title = capitalize();
+  },[pageNumber,props.country,props.pageSize,props.category]);
+
+  const capitalize = ()=>{
+    let word = props.category;
+    let capi = word.charAt(0).toUpperCase() + word.slice(1, word.length);
+    return capi;
+    
+  }
 
   const handlePrevoiustNews = ()=>{
     if(pageNumber>1){
@@ -189,6 +197,7 @@ useEffect(()=>{
   return (
     <div className="container my-4 ">
       <h2 className='text-center'>React NewsPaper</h2>
+      <h5 className='text-center my-4'>Top HeadLines From {capitalize()}</h5>
       {!loading && <Spinner/> }  
       <div className="row my-4">
         {loading && articles.map((article) => {
@@ -207,6 +216,9 @@ useEffect(()=>{
                 }
                 imgUrl={article.urlToImage}
                 newsUrl={article.url}
+                author={article.author}
+                date={article.publishedAt}
+                source={article.source.name}
               ></NewsItem>
             </div>
           );
@@ -223,6 +235,18 @@ useEffect(()=>{
       </div>
     </div>
   );
+}
+
+News.defaultProps = {
+  country: "in",
+  pageSize: 6,
+  category: "general",
+};
+
+News.propTypes = {
+  country: PropTypes.string,
+  pageSize: PropTypes.string,
+  category: PropTypes.string,
 }
 
  export default News;
