@@ -10,7 +10,7 @@ class App extends React.Component{
     return (
       <div>
         <Navbar></Navbar>
-        <News></News>
+        <News pageSize="6"></News>
       </div>
     );
   }

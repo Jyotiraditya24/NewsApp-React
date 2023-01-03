@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import NewsItem from './NewsItem'
+import Spinner from './Spinner';
 
-let News = ()=> {
+let News = (props)=> {
   const[articles,setArticles] = useState([
     {
       source: {
@@ -153,34 +154,44 @@ let News = ()=> {
     },
   ]);
   const[pageNumber,setPageNumber] = useState(1);
+  const[loading,setLoading] = useState(false);
 
 useEffect(()=>{
       let fetchData = async()=>{
           let data = await fetch(
-            `https://newsapi.org/v2/top-headlines?country=us&apiKey=5897b0bf2be647b7ab42fa7143b789ae&page=${pageNumber}&pageSize=6`
-          );
+            `https://newsapi.org/v2/top-headlines?country=us&apiKey=5897b0bf2be647b7ab42fa7143b789ae&page=${pageNumber}&pageSize=${props.pageSize?props.pageSize:6}`
+          )
+          setLoading(true);
           let parsedData = await data.json();
           setArticles(parsedData.articles);
       } 
+      setLoading(false);
       fetchData();
+      
   },[pageNumber]);
 
   const handlePrevoiustNews = ()=>{
     if(pageNumber>1){
     setPageNumber(pageNumber - 1);
-    }else {pageNumber = 1};
+    setLoading(false);
+    }else {
+      setPageNumber(1)
+      setLoading(false);
+    };
     
   }
 
   const handleNextNews = ()=>{
     setPageNumber( pageNumber + 1 )
+    setLoading(false);
   }
 
   return (
     <div className="container my-4 ">
-      <h2>This is will be newsPaper</h2>
+      <h2 className='text-center'>React NewsPaper</h2>
+      {!loading && <Spinner/> }  
       <div className="row my-4">
-        {articles.map((article) => {
+        {loading && articles.map((article) => {
           return (
             <div className="col-md-4" key={article.url}>
               <NewsItem
@@ -206,7 +217,7 @@ useEffect(()=>{
           &larr; Previous
         </button>
         <div className='btn btn-outline-success'>{pageNumber<1?1:pageNumber}</div>
-        <button disabled={pageNumber===6} onClick={handleNextNews} type="button" className="btn btn-outline-danger">
+        <button disabled={pageNumber===props.pageSize} onClick={handleNextNews} type="button" className="btn btn-outline-danger">
           Next &rarr;
         </button>
       </div>
