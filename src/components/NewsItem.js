@@ -13,7 +13,7 @@ export class NewsItem extends Component {
               "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(51,44,57,1)74%)",
           }}
         >
-          <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
+          <span className="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
             {source}
           </span>
           <img src={imgUrl} className="card-img-top" alt="..." />

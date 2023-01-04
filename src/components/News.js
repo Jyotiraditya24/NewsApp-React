@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import NewsItem from './NewsItem'
 import Spinner from './Spinner';
 import PropTypes from "prop-types";
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 
 let News = (props)=> {
   const[articles,setArticles] = useState([
@@ -155,23 +157,27 @@ let News = (props)=> {
     },
   ]);
   const[pageNumber,setPageNumber] = useState(1);
-  const[loading,setLoading] = useState(false);
+  const[loading,setLoading] = useState(true);
+  const[totalResults,setTotalResults] = useState(0);
 
 useEffect(()=>{
+  props.setProgress(10);
       let fetchData = async()=>{
           let data = await fetch(
-            `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=5897b0bf2be647b7ab42fa7143b789ae&page=${pageNumber}&pageSize=${props.pageSize?props.pageSize:6}`
+            `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${pageNumber}&pageSize=${props.pageSize?props.pageSize:6}`
           )
-          setLoading(true);
+          props.setProgress(90);
           let parsedData = await data.json();
+
           setArticles(parsedData.articles);
+          setTotalResults(parsedData.totalResults);
       } 
-      setLoading(false);
-      // fetchData();
-      
+      setLoading(true);
+      props.setProgress(100);
+      fetchData();
       document.title = capitalize();
       
-  },[pageNumber,props.country,props.pageSize,props.category]);
+;  },[pageNumber,props.country,props.pageSize,props.category]);
 
   const capitalize = () => {
     let word = props.category;
@@ -179,21 +185,13 @@ useEffect(()=>{
     return capi;
   };
   
-
-  const handlePrevoiustNews = ()=>{
-    if(pageNumber>1){
-    setPageNumber(pageNumber - 1);
-    setLoading(false);
-    }else {
-      setPageNumber(1)
-      setLoading(false);
-    };
-    
-  }
-
-  const handleNextNews = ()=>{
-    setPageNumber( pageNumber + 1 )
-    setLoading(false);
+  const fetchMore =  async () =>{
+    setPageNumber(pageNumber +1);
+    let data = await fetch(
+            `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=5897b0bf2be647b7ab42fa7143b789ae&page=${pageNumber}&pageSize=${props.pageSize?props.pageSize:6}`
+          )
+          let parsedData = await data.json();
+          setArticles(articles.concat(parsedData.articles)); 
   }
 
   return (
@@ -201,8 +199,9 @@ useEffect(()=>{
       <h2 className='text-center' style={{color:"antiquewhite"}}>React NewsPaper</h2>
       <h5 className='text-center my-4' style={{color:"antiquewhite"}}>Top HeadLines From {capitalize()}</h5>
       {!loading && <Spinner/> }  
-      <div className="row my-4">
-        {loading && articles.map((article) => {
+        <InfiniteScroll dataLength = {articles.length} next={fetchMore} hasMore={articles.length!==totalResults} loader={<Spinner></Spinner>} >
+        <div className="row my-4">
+        {articles.map((article) => {
           return (
             <div className="col-md-4" key={article.url}>
               <NewsItem
@@ -225,16 +224,8 @@ useEffect(()=>{
             </div>
           );
         })}
-      </div>
-      <div className="container d-flex flex-row justify-content-between">
-        <button disabled={pageNumber<=1} type="button" className="btn btn-outline-info" onClick={handlePrevoiustNews}>
-          &larr; Previous
-        </button>
-        <div className='btn btn-outline-success'>{pageNumber<1?1:pageNumber}</div>
-        <button disabled={pageNumber===props.pageSize} onClick={handleNextNews} type="button" className="btn btn-outline-danger">
-          Next &rarr;
-        </button>
-      </div>
+          </div>
+        </InfiniteScroll>
     </div>
   );
 }
