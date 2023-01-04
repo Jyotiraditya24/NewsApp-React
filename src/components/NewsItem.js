@@ -5,10 +5,16 @@ export class NewsItem extends Component {
     let {title,description,imgUrl,newsUrl,author,date,source} = this.props;
     return (
       <div className="mx-2 my-2">
-        <div className="card" style={{ background: "lavender" }}>
+        <div
+          className="card"
+          style={{
+            color: "antiquewhite",
+            background:
+              "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(51,44,57,1)74%)",
+          }}
+        >
           <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
             {source}
-            <span class="visually-hidden">unread messages</span>
           </span>
           <img src={imgUrl} className="card-img-top" alt="..." />
           <div className="card-body">
@@ -22,13 +28,13 @@ export class NewsItem extends Component {
                 Full Article
               </a>
               <p className="card-text mt-2">
-                <small className="text-muted">
+                <small style={{ color: "antiquewhite" }}>
                   Published At: {new Date(date).toGMTString()}
                 </small>
               </p>
               <p className="card-text mt-2">
-                <small className="text-muted">
-                  Authored By: {author ? author : "unknow"}
+                <small style={{ color: "antiquewhite" }}>
+                  Authored By: {author ? author : "unknown"}
                 </small>
               </p>
             </div>

@@ -168,15 +168,17 @@ useEffect(()=>{
       } 
       setLoading(false);
       // fetchData();
+      
       document.title = capitalize();
+      
   },[pageNumber,props.country,props.pageSize,props.category]);
 
-  const capitalize = ()=>{
+  const capitalize = () => {
     let word = props.category;
     let capi = word.charAt(0).toUpperCase() + word.slice(1, word.length);
     return capi;
-    
-  }
+  };
+  
 
   const handlePrevoiustNews = ()=>{
     if(pageNumber>1){
@@ -196,8 +198,8 @@ useEffect(()=>{
 
   return (
     <div className="container my-4 ">
-      <h2 className='text-center'>React NewsPaper</h2>
-      <h5 className='text-center my-4'>Top HeadLines From {capitalize()}</h5>
+      <h2 className='text-center' style={{color:"antiquewhite"}}>React NewsPaper</h2>
+      <h5 className='text-center my-4' style={{color:"antiquewhite"}}>Top HeadLines From {capitalize()}</h5>
       {!loading && <Spinner/> }  
       <div className="row my-4">
         {loading && articles.map((article) => {

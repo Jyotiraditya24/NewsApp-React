@@ -50,7 +50,7 @@ class App extends React.Component {
               exact
               path="/entertainment"
               element={
-                <News key="6"  pageSize="6" country="in" category="entertaiment"></News>
+                <News key="6"  pageSize="6" country="in" category="entertainment"></News>
               }
             />
             <Route
