@@ -1,25 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import Navbar from "./components/NavBar";
 import News from "./components/News";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
 
-class App extends React.Component {
-  state = {
-    progress: 0,
-  };
-  apiKey = process.env.REACT_APP_NEWS_API_KEY;
-  setProgress = (progress) => {
-    this.setState({ progress: progress });
-  };
-  render() {
+ const App = () => {
+
+  const[progress,setProgress] = useState(0)
+  const apiKey = process.env.REACT_APP_NEWS_API_KEY;
+ 
     return (
       <div>
         <Router>
           <LoadingBar
             color="#f11946"
-            progress={this.state.progress}
+            progress={progress}
           ></LoadingBar>
           <Navbar></Navbar>
           <Routes>
@@ -28,8 +24,8 @@ class App extends React.Component {
               path="/"
               element={
                 <News
-                  apiKey={this.apiKey}
-                  setProgress={this.setProgress}
+                  apiKey={apiKey}
+                  setProgress={setProgress}
                   key="1"
                   pageSize="6"
                   country="in"
@@ -42,8 +38,8 @@ class App extends React.Component {
               path="/technology"
               element={
                 <News
-                  apiKey={this.apiKey}
-                  setProgress={this.setProgress}
+                  apiKey={apiKey}
+                  setProgress={setProgress}
                   key="2"
                   pageSize="6"
                   country="in"
@@ -56,8 +52,8 @@ class App extends React.Component {
               path="/business"
               element={
                 <News
-                  apiKey={this.apiKey}
-                  setProgress={this.setProgress}
+                  apiKey={apiKey}
+                  setProgress={setProgress}
                   key="3"
                   pageSize="6"
                   country="in"
@@ -70,8 +66,8 @@ class App extends React.Component {
               path="/sports"
               element={
                 <News
-                  apiKey={this.apiKey}
-                  setProgress={this.setProgress}
+                  apiKey={apiKey}
+                  setProgress={setProgress}
                   key="4"
                   pageSize="6"
                   country="in"
@@ -84,8 +80,8 @@ class App extends React.Component {
               path="/science"
               element={
                 <News
-                  apiKey={this.apiKey}
-                  setProgress={this.setProgress}
+                  apiKey={apiKey}
+                  setProgress={setProgress}
                   key="5"
                   pageSize="6"
                   country="in"
@@ -98,8 +94,8 @@ class App extends React.Component {
               path="/entertainment"
               element={
                 <News
-                  apiKey={this.apiKey}
-                  setProgress={this.setProgress}
+                  apiKey={apiKey}
+                  setProgress={setProgress}
                   key="6"
                   pageSize="6"
                   country="in"
@@ -112,8 +108,8 @@ class App extends React.Component {
               path="/general"
               element={
                 <News
-                  apiKey={this.apiKey}
-                  setProgress={this.setProgress}
+                  apiKey={apiKey}
+                  setProgress={setProgress}
                   key="7"
                   pageSize="6"
                   country="in"
@@ -126,6 +122,5 @@ class App extends React.Component {
       </div>
     );
   }
-}
 
 export default App;

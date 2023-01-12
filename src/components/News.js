@@ -3,9 +3,10 @@ import NewsItem from './NewsItem'
 import Spinner from './Spinner';
 import PropTypes from "prop-types";
 import InfiniteScroll from 'react-infinite-scroll-component';
+import imgNotAvailable from './imgNotAvailable.png';
 
 
-let News = (props)=> {
+const News = (props)=> {
   const[articles,setArticles] = useState([
     {
       source: {
@@ -174,10 +175,11 @@ useEffect(()=>{
       } 
       setLoading(true);
       props.setProgress(100);
-      fetchData();
+      // fetchData();
       document.title = capitalize();
+      console.log(document.title);
       
-;  },[pageNumber,props.country,props.pageSize,props.category]);
+  },[]);
 
   const capitalize = () => {
     let word = props.category;
@@ -186,17 +188,17 @@ useEffect(()=>{
   };
   
   const fetchMore =  async () =>{
-    setPageNumber(pageNumber +1);
     let data = await fetch(
-            `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=5897b0bf2be647b7ab42fa7143b789ae&page=${pageNumber}&pageSize=${props.pageSize?props.pageSize:6}`
+            `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=5897b0bf2be647b7ab42fa7143b789ae&page=${pageNumber+1}&pageSize=${props.pageSize?props.pageSize:6}`
           )
+          setPageNumber(pageNumber + 1);
           let parsedData = await data.json();
           setArticles(articles.concat(parsedData.articles)); 
   }
 
   return (
     <div className="container my-4 ">
-      <h2 className='text-center' style={{color:"antiquewhite"}}>React NewsPaper</h2>
+      <h2 className='text-center' style={{color:"antiquewhite",marginTop:"5rem"}}>React NewsPaper</h2>
       <h5 className='text-center my-4' style={{color:"antiquewhite"}}>Top HeadLines From {capitalize()}</h5>
       {!loading && <Spinner/> }  
         <InfiniteScroll dataLength = {articles.length} next={fetchMore} hasMore={articles.length!==totalResults} loader={<Spinner></Spinner>} >
@@ -215,7 +217,7 @@ useEffect(()=>{
                     ? article.description.concat("......read more")
                     : null
                 }
-                imgUrl={article.urlToImage}
+                imgUrl={article.urlToImage == null? imgNotAvailable: article.urlToImage}
                 newsUrl={article.url}
                 author={article.author}
                 date={article.publishedAt}
