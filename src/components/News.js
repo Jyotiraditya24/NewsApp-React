@@ -175,7 +175,7 @@ useEffect(()=>{
       } 
       setLoading(true);
       props.setProgress(100);
-      // fetchData();
+      fetchData();
       document.title = capitalize();
       console.log(document.title);
       
